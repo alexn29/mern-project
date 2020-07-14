@@ -27,9 +27,9 @@ const TaskList = () => {
                     tasksProject.length === 0 ?
                     <li key={0} className="tarea"><p>No hay tareas</p></li>
                     :
-                    tasksProject.map((task, index) => (
+                    tasksProject.map(task => (
                         <Task
-                            key={index} 
+                            key={task.id} 
                             task={task} />
                     ))
                 }
