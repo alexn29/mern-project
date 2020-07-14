@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import projectContext from '../../context/projects/projectContext';
 import TaskContext from '../../context/tasks/taskContext';
 
@@ -8,7 +8,25 @@ const FormTask = () => {
     const { project } = projectsContext;
 
     const tasksContext = useContext(TaskContext);
-    const { createTask } = tasksContext;
+    const { 
+        selectedTask,
+        errorTask,
+        createTask,
+        validateTask,
+        getTasksByProjectID,
+        updateTask,
+        cleanTask
+    } = tasksContext;
+
+    useEffect(() => {
+        if (selectedTask !== null) {
+            setTask(selectedTask)
+        } else {
+            setTask({
+                name: ''
+            })
+        }
+    }, [selectedTask])
 
     const [task, setTask] = useState({
         name: ''
@@ -29,9 +47,27 @@ const FormTask = () => {
 
     const onSubmit = e => {
         e.preventDefault();
-        task.projectId = currentProject.id;
-        task.status = false;
-        createTask(task);
+
+        if (name.trim() === '') {
+            validateTask();
+            return;
+        }
+
+        if (selectedTask === null) {
+            task.projectId = currentProject.id;
+            task.status = false;
+            createTask(task);
+        }
+        else {
+            updateTask(task);
+            cleanTask();
+        }
+
+        getTasksByProjectID(currentProject.id);
+
+        setTask({
+            name: ''
+        });
     }
 
     return (
@@ -52,9 +88,13 @@ const FormTask = () => {
                     <input 
                         type="submit"
                         className="btn btn-primario btn-submit btn-block"
-                        value="Agregar Tarea" />
+                        value={ selectedTask ? "Editar Tarea" : "Agregar Tarea" } />
                 </div>
             </form>
+            { errorTask ? 
+                <p className="mensaje error">El nombre de la tarea es obligatorio.</p> 
+                : null 
+            }
         </div>
     );
 };
