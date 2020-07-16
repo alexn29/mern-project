@@ -41,6 +41,6 @@ exports.authUser = async (req, res) => {
         });
 
     } catch (error) {
-        console.error(error);
+        res.status(500).send(messages.status[500]);
     }
 }
