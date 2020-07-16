@@ -23,7 +23,6 @@ exports.createProject = async (req, res) => {
 // get all projects from current user
 exports.getProjectsByUser = async (req, res) => {
     try {
-        console.log(req.user);
         const projects = await Project.find({ author: req.user.id }).sort({ createdAt: -1 });
         res.json({ projects });
     } catch (error) {
@@ -64,7 +63,6 @@ exports.updateProject = async (req, res) => {
         res.json({ project });
 
     } catch (error) {
-        console.log(error);
         res.status(500).send(messages.status[500]);
     }
 }
@@ -87,7 +85,6 @@ exports.deleteProject = async (req, res) => {
         res.json({ msg: messages.onDelete });
 
     } catch (error) {
-        console.log(error);
         res.status(500).send(messages.status[500]);
     }
 }
